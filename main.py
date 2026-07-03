@@ -85,9 +85,13 @@ def extract_vendor(text):
     return None
 
 def extract_amount(text):
-    m = re.search(r"Subtotal\s*:?\s*(?:Rs\.?|₹|USD|\$)?\s*([\d,]+\.?\d*)", text, re.IGNORECASE)
-    if m:
-        return parse_number(m.group(1))
+    patterns = [
+        r"(?:Sub[\s\-]?Total|Taxable\s*(?:Value|Amount)|Net\s*Amount|Base\s*Amount|(?<!Tax\s)(?<!Total\s)(?<!Grand\s)Amount(?:\s*\(before\s*tax\))?)\s*:?\s*(?:Rs\.?|₹|INR|USD|\$|EUR|€|GBP|£)?\s*([\d,]+\.?\d*)",
+    ]
+    for p in patterns:
+        m = re.search(p, text, re.IGNORECASE)
+        if m:
+            return parse_number(m.group(1))
     return None
 
 def extract_tax(text):
