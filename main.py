@@ -36,12 +36,14 @@ def parse_number(s):
 
 def extract_invoice_no(text):
     patterns = [
-        r"(?:Ref|Invoice\s*#|Invoice\s*No\.?|Invoice\s*Number)\s*:?\s*([A-Za-z0-9\/\-]+)",
+        r"(?:Invoice\s*(?:No\.?\b|Number\b|#|ID\b)|Ref(?:erence)?\s*(?:No\.?)?\b|Bill\s*No\.?\b|Voucher\s*No\.?\b|Doc(?:ument)?\s*(?:No\.?|Number|ID)?\b)\s*:?\s*#?\s*([A-Za-z0-9\/\-]+)",
     ]
     for p in patterns:
         m = re.search(p, text, re.IGNORECASE)
         if m:
-            return m.group(1).strip()
+            val = m.group(1).strip()
+            if val:
+                return val
     return None
 
 def extract_date(text):
